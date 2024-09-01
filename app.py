@@ -6,7 +6,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import dotenv
-
+import re
 dotenv.load_dotenv()
 
 GOOGLE_SHEET_ID = os.getenv("GOOGLE_SPREADSHEET_ID")
@@ -41,11 +41,15 @@ def read_google_sheet(service):
 
 def read_status_and_phones(values):
     status_and_phones = []
-    for row in values:
-        if row:
+    for row in values[1:]:
+        if row and row[0] and any(row[1:]):
             status = row[0]
             phone_numbers = row[10:13]
-            status_and_phones.append((status, phone_numbers))
+            for phone in phone_numbers:
+                if phone:
+                    match = re.match(r"^\d{10}$", phone)
+                    if match:
+                        status_and_phones.append((status, phone))
     return status_and_phones
 
 def main():
