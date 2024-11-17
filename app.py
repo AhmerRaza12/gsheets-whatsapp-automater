@@ -52,11 +52,16 @@ def read_status_and_phones(values):
                         status_and_phones.append((status, phone))
     return status_and_phones
 
+
+def send_messages_via_whatsapp_api(status_and_phones):
+    phones= [phone for status, phone in status_and_phones]
+    print(phones)
 def main():
     service = get_google_sheets_service()
     values = read_google_sheet(service)
     status_and_phones = read_status_and_phones(values)
     print(status_and_phones)
+    # send_messages_via_whatsapp_api(status_and_phones)
 
 if __name__ == "__main__":
     main()
